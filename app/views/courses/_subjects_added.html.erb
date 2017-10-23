@@ -4,6 +4,7 @@
     html: { method: :delete }) do |f| %>
     <div><%= hidden_field_tag :subject_id, subject.id %></div>
     <div><%= hidden_field_tag :course_id, @course.id %></div>
+    <%= find_cs(@course, subject).date_start %>
     <%= f.submit t("courses._added.remove"), class: "btn btn-danger" %>
   <% end %>
 </li>

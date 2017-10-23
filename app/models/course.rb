@@ -3,10 +3,10 @@ class Course < ApplicationRecord
   has_many :having, through: :course_subjects, source: :subject
   has_many :subjects, through: :course_subjects
   has_many :user_courses, dependent: :destroy
-  has_many :users, through: :user_courses
   has_many :having_user, through: :user_courses, source: :user
   default_scope ->{order(created_at: :desc)}
 
+  scope :not_status_init, ->{where.not status: "init"}
   enum status: [:init, :in_progress, :finish]
 
   def have subject, date_start

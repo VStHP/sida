@@ -20,6 +20,7 @@ class CourseSubjectsController < ApplicationController
   def destroy
     if @sb_course.init?
       if @course.unhave @subject
+        flash[:success] = t "controllers.course_subjects.flash_success_destroy"
         respond_to do |format|
           format.html{redirect_to edit_course_path(@course)}
           format.js
@@ -39,6 +40,7 @@ class CourseSubjectsController < ApplicationController
       @sb_course.date_end = Time.zone.now
       if @sb_course.save
         flash[:success] = t "controllers.course_subjects.flash_success_update"
+        save_user_subject if @sb_course.in_progress?
       else
         flash[:danger] = t "controllers.course_subjects.flash_danger_update"
       end
@@ -62,6 +64,13 @@ class CourseSubjectsController < ApplicationController
     unless @sb_course
       flash[:danger] = t "controllers.course_subjects.flash_danger"
       redirect_to root_path
+    end
+  end
+
+  def save_user_subject
+    trainees = @course.users.without_suppervisor.pluck(:id)
+    trainees.each do |id|
+      @sb_course.have id
     end
   end
 end
